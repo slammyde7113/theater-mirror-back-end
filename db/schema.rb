@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170718141756) do
+ActiveRecord::Schema.define(version: 20170718154046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,15 +30,15 @@ ActiveRecord::Schema.define(version: 20170718141756) do
   create_table "comments", force: :cascade do |t|
     t.integer  "comment_id"
     t.datetime "date_created"
-    t.integer  "users_id"
-    t.integer  "articles_id"
+    t.integer  "user_id"
+    t.integer  "article_id"
     t.text     "title"
     t.text     "body"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-    t.index ["articles_id"], name: "index_comments_on_articles_id", using: :btree
+    t.index ["article_id"], name: "index_comments_on_article_id", using: :btree
     t.index ["comment_id"], name: "index_comments_on_comment_id", using: :btree
-    t.index ["users_id"], name: "index_comments_on_users_id", using: :btree
+    t.index ["user_id"], name: "index_comments_on_user_id", using: :btree
   end
 
   create_table "examples", force: :cascade do |t|
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 20170718141756) do
   end
 
   add_foreign_key "articles", "users"
-  add_foreign_key "comments", "articles", column: "articles_id"
-  add_foreign_key "comments", "users", column: "users_id"
+  add_foreign_key "comments", "articles"
+  add_foreign_key "comments", "users"
   add_foreign_key "examples", "users"
 end
