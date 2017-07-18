@@ -15,7 +15,10 @@ class ArticlesController < ApplicationController
 
   # POST /articles
   def create
+    current_time = DateTime.now
+    current_time.strftime("%B #{current_time.day.ordinalize}, %Y")
     @article = Article.new(article_params)
+    @article.date_created = current_time
 
     if @article.save
       render json: @article, status: :created, location: @article
@@ -46,6 +49,6 @@ class ArticlesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def article_params
-      params.require(:article).permit(:article_id, :date_created, :user_id, :title, :body)
+      params.require(:article).permit(:date_created, :user_id, :title, :body)
     end
 end
