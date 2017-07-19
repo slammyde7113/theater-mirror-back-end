@@ -2,6 +2,10 @@
 # Do not inherit from this class unless you know what you're doing
 # See ProtectedController and OpenReadController
 class ApplicationController < ActionController::API
+  rescue_from CanCan::AccessDenied do |exception|
+    flash[:error] = 'Access denied.'
+    redirect_to root_url
+  end
   # Force to wants JSON for API
   before_action :api_request_settings
   def api_request_settings
