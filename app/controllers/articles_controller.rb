@@ -1,4 +1,5 @@
-class ArticlesController < ApplicationController
+class ArticlesController < ProtectedController
+
   before_action :set_article, only: [:show, :update, :destroy]
 
   # GET /articles
@@ -15,8 +16,7 @@ class ArticlesController < ApplicationController
 
   # POST /articles
   def create
-    current_time = DateTime.now
-    current_time.strftime("%B #{current_time.day.ordinalize}, %Y")
+    if current_user.admin
     @article = Article.new(article_params)
     @article.date_created = current_time
 
@@ -25,20 +25,31 @@ class ArticlesController < ApplicationController
     else
       render json: @article.errors, status: :unprocessable_entity
     end
+  else
+    render json: "Access Denied", status: 401
   end
+end
 
   # PATCH/PUT /articles/1
   def update
-    if @article.update(article_params)
-      render json: @article
+    if current_user.admin
+      if @article.update(article_params)
+        render json: @article
+      else
+        render json: @article.errors, status: :unprocessable_entity
+      end
     else
-      render json: @article.errors, status: :unprocessable_entity
+      render json: "Access Denied", status: 401
     end
   end
 
   # DELETE /articles/1
   def destroy
-    @article.destroy
+    if current_user.admin
+      @article.destroy
+    else
+      render json: "Access Denied", status: 401
+    end
   end
 
   private
