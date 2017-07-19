@@ -16,7 +16,6 @@ class ArticlesController < ProtectedController
 
   # POST /articles
   def create
-    binding.pry
     if current_user.admin
     @article = Article.new(article_params)
 
@@ -32,16 +31,24 @@ end
 
   # PATCH/PUT /articles/1
   def update
-    if @article.update(article_params)
-      render json: @article
+    if current_user.admin
+      if @article.update(article_params)
+        render json: @article
+      else
+        render json: @article.errors, status: :unprocessable_entity
+      end
     else
-      render json: @article.errors, status: :unprocessable_entity
+      render json: "Access Denied", status: 401
     end
   end
 
   # DELETE /articles/1
   def destroy
-    @article.destroy
+    if current_user.admin
+      @article.destroy
+    else
+      render json: "Access Denied", status: 401
+    end
   end
 
   private
