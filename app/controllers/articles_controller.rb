@@ -18,6 +18,7 @@ class ArticlesController < ProtectedController
   def create
     if current_user.admin
     @article = Article.new(article_params)
+    @article.date_created = current_time
 
     if @article.save
       render json: @article, status: :created, location: @article
