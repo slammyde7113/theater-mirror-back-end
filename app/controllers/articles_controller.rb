@@ -1,4 +1,4 @@
-class ArticlesController < ApplicationController
+class ArticlesController < ProtectedController
 
   before_action :set_article, only: [:show, :update, :destroy]
 
@@ -16,6 +16,8 @@ class ArticlesController < ApplicationController
 
   # POST /articles
   def create
+    binding.pry
+    if current_user.admin
     @article = Article.new(article_params)
 
     if @article.save
@@ -23,7 +25,10 @@ class ArticlesController < ApplicationController
     else
       render json: @article.errors, status: :unprocessable_entity
     end
+  else
+    render json: "Access Denied", status: 401
   end
+end
 
   # PATCH/PUT /articles/1
   def update
