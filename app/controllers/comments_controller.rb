@@ -27,16 +27,24 @@ class CommentsController < ProtectedController
 
   # PATCH/PUT /comments/1
   def update
-    if @comment.update(comment_params)
-      render json: @comment
+    if current_user.admin || current_user.member
+      if @comment.update(comment_params)
+        render json: @comment
+      else
+        render json: @comment.errors, status: :unprocessable_entity
+      end
     else
-      render json: @comment.errors, status: :unprocessable_entity
+      render json: "Access Denied", status: 401
     end
   end
 
   # DELETE /comments/1
   def destroy
-    @comment.destroy
+    if current_user.admin || current_user.member
+      @comment.destroy
+    else
+      render json: "Access Denied", status: 401
+    end
   end
 
   private
