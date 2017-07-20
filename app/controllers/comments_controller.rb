@@ -28,7 +28,6 @@ class CommentsController < ProtectedController
 
   # PATCH/PUT /comments/1
   def update
-    binding.pry
     if current_user.admin
       if @comment.update(comment_params)
         render json: @comment
