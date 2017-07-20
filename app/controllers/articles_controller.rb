@@ -18,7 +18,7 @@ class ArticlesController < ProtectedController
   def create
     if current_user.admin
     @article = Article.new(article_params)
-    @article.date_created = current_time
+    @article.user_id = current_user.id
 
     if @article.save
       render json: @article, status: :created, location: @article
@@ -60,6 +60,6 @@ end
 
     # Only allow a trusted parameter "white list" through.
     def article_params
-      params.require(:article).permit(:date_created, :user_id, :title, :body)
+      params.require(:article).permit(:title, :body)
     end
 end
